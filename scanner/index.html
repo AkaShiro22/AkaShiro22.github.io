@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="js/qrcode.js"></script>
+    <style>
+        #reader {
+            width: 300px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1><center>Scan QR Code</h1>
+    <div id="reader"></div>
+
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+
+            if (decodedText.startsWith("http://") || decodedText.startsWith("https://")) {
+                // If the scanned text is a URL, redirect to the URL
+                window.location.href = decodedText;
+            } else {
+                // If it's not a URL, assume it's a username and redirect accordingly
+                const username = decodedText;
+                const redirectUrl = `http://192.168.182.1:4990/login?username=${encodeURIComponent(username)}&password=Accept`;
+                window.location.href = redirectUrl;
+            }
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Kode gagal dipindai: ${error}`);
+        }
+
+        const config = { fps: 1, qrbox: 250 };
+        const html5QrcodeScanner = new Html5QrcodeScanner("reader", config, false);
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    </script>
+</body>
+</html>
